@@ -14,6 +14,7 @@ public partial class ApplicationDriver : System.Web.UI.Page
 {
     public static Employee[] employeeArray = new Employee[3];
     public static int count = 0;
+    public static string[,] returnArray = new string[100, 2];
     
     
 
@@ -252,7 +253,7 @@ public partial class ApplicationDriver : System.Web.UI.Page
         {
             //Connects to the database and returns the connection
             System.Data.SqlClient.SqlConnection sc = new System.Data.SqlClient.SqlConnection();
-            sc.ConnectionString = @"Server =Localhost; Database=Lab1;Trusted_Connection=Yes";
+            sc.ConnectionString = @"Server =Localhost; Database=Lab2;Trusted_Connection=Yes";
             sc.Open();
             return sc;
         }
@@ -563,8 +564,73 @@ public partial class ApplicationDriver : System.Web.UI.Page
     }
     
 
+    private void validationSelect(string a, string table)
+    {
+        Array.Clear(returnArray, 0, returnArray.Length);
+        int i = 0;
+        try
+        {
+            //Connect to the DB
+            System.Data.SqlClient.SqlConnection sqlc = connectToDB();
+
+            //Creates a new sql select command to select the data from the skills table
+            System.Data.SqlClient.SqlCommand select = new System.Data.SqlClient.SqlCommand();
+            select.Connection = sqlc;
+            select.CommandText = "select " + a.ToUpper() + " from [dbo].[" + table + "]";
+            System.Data.SqlClient.SqlDataReader reader;
+
+            reader = select.ExecuteReader();
+
+            
+            while (reader.Read())
+            {
+                returnArray[i,0] = reader.GetString(0);
+                i++;
+            }
+            sqlc.Close();
+        }
+        catch (Exception c)
+        {
+            //Shows an error message if there is a problem connecting to the database
+            resultMessage.Text += "Database Error 3";
+            resultMessage.Text += c.Message;
+        }
+        
+    }
     
-    
+    private void validationSelect(string a, string b, string table)
+    {
+        Array.Clear(returnArray, 0, returnArray.Length);
+        int i = 0;
+        try
+        {
+            //Connect to the DB
+            System.Data.SqlClient.SqlConnection sqlc = connectToDB();
+
+            //Creates a new sql select command to select the data from the skills table
+            System.Data.SqlClient.SqlCommand select = new System.Data.SqlClient.SqlCommand();
+            select.Connection = sqlc;
+            select.CommandText = "select " + a.ToUpper + "," + b.ToUpper + " from [dbo].[" + table.ToUpper + "]";
+            System.Data.SqlClient.SqlDataReader reader;
+
+            reader = select.ExecuteReader();
+
+
+            while (reader.Read())
+            {
+                returnArray[i,0] = reader.GetString(0);
+                returnArray[i,1] = reader.GetString(1);
+                i++;
+            }
+            sqlc.Close();
+        }
+        catch (Exception c)
+        {
+            //Shows an error message if there is a problem connecting to the database
+            resultMessage.Text += "Database Error 3";
+            resultMessage.Text += c.Message;
+        }
+    }
     
 
 

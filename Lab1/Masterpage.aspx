@@ -22,11 +22,11 @@
     <div>
         
     </div>
-        <asp:GridView ID="GridView1" runat="server" DataSourceID="SqlDataSource1" Height="118px" OnSelectedIndexChanged="GridView1_SelectedIndexChanged" Width="146px" AutoGenerateColumns="False" DataKeyNames="EmployeeID">
+        <asp:GridView ID="GridView1" runat="server" DataSourceID="employeeAllInformation" Height="118px" OnSelectedIndexChanged="GridView1_SelectedIndexChanged" Width="146px" AutoGenerateColumns="False" DataKeyNames="EmployeeID">
             <Columns>
-                <asp:BoundField DataField="EmployeeID" HeaderText="EmployeeID" ReadOnly="True" SortExpression="EmployeeID" />
+                <asp:BoundField  DataField="EmployeeID" HeaderText="EmployeeID" ReadOnly="True" SortExpression="EmployeeID" />
                 <asp:BoundField DataField="FirstName" HeaderText="FirstName" SortExpression="FirstName" />
-                <asp:BoundField DataField="LastName" HeaderText="LastName" SortExpression="LastName" />
+                <asp:BoundField Visible="false" DataField="LastName" HeaderText="LastName" SortExpression="LastName" />
                 <asp:BoundField DataField="MI" HeaderText="MI" SortExpression="MI" />
                 <asp:BoundField DataField="HouseNumber" HeaderText="HouseNumber" SortExpression="HouseNumber" />
                 <asp:BoundField DataField="Street" HeaderText="Street" SortExpression="Street" />
@@ -43,15 +43,15 @@
                 <asp:BoundField DataField="LastUpdated" HeaderText="LastUpdated" SortExpression="LastUpdated" />
             </Columns>
         </asp:GridView>
-        <asp:SqlDataSource  ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:Lab2ConnectionString %>" SelectCommand="SELECT * FROM [Employee]"></asp:SqlDataSource>
-        <asp:Button ID="btnEmployee" runat="server" Text="Display Employee Info" />
-        <asp:Button ID="btnProject" runat="server" Text="Display Project Info" />
-        <asp:Button ID="btnSkill" runat="server" Text="Display Skill Info" />
+        <asp:SqlDataSource  ID="employeeAllInformation" runat="server" ConnectionString="<%$ ConnectionStrings:Lab2ConnectionString %>" SelectCommand="SELECT * FROM [Employee]"></asp:SqlDataSource>
+        <asp:Button CssClass="btn" ID="btnEmployee" runat="server" Text="Display Employee Info" OnClick="btnEmployee_Click" />
+        <asp:Button CssClass="btn" ID="btnProject" runat="server" Text="Display Project Info" OnClick="btnProject_Click" />
+        <asp:Button CssClass="btn" ID="btnSkill" runat="server" Text="Display Skill Info" OnClick="btnSkill_Click" />
         <p>
             <asp:CheckBox Text="Display All Employee Information" ID="CheckBox1" runat="server" OnCheckedChanged="CheckBox1_CheckedChanged" />
         </p>
         <asp:Label ID="lblUser" runat="server" Text="User: "></asp:Label>
-        <asp:TextBox ID="txtUser" runat="server"></asp:TextBox>
+        <asp:TextBox CssClass="inputText" ID="txtUser" runat="server"></asp:TextBox>
         <p>
         <asp:Button CssClass="btn" ID="btnLogin" runat="server" Text="Login" />
         </p>

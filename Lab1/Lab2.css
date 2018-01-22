@@ -42,3 +42,8 @@ li a:hover:not(.active) {
     color: whitesmoke;
     
 }
+
+.hide 
+{
+    display: none;
+}
