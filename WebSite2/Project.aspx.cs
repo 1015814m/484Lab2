@@ -21,16 +21,7 @@ public partial class Default3 : System.Web.UI.Page
     {
         Boolean ensureDB = true;
         
-        if (checkDB(txtProjectName.Text, "ProjectName") == false)
-        {
-            ensureDB = false;
-            lblAlert.Text += "This project name already exists.";
-        }
-        if (checkDB(txtProjectDescription.Text, "ProjectDescription") == false)
-        {
-            ensureDB = false;
-            lblAlert.Text += "This project description already exists.";
-        }
+        
 
         if (ensureDB == true)
         {

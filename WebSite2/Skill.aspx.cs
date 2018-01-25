@@ -15,16 +15,7 @@ public partial class Default2 : System.Web.UI.Page
     protected void btnCommitSkill_Click(object sender, EventArgs e)
     {
         Boolean ensureDB = true;
-        if (checkDB(txtSkillName.Text, "SkillName") == false)
-        {
-            ensureDB = false;
-            lblAlert.Text += "This Skill already exists.";
-        }
-        if (checkDB(txtSkillDescription.Text,"SkillDescription") == false)
-        {
-            ensureDB = false;
-            lblAlert.Text += "This skill description already exists.";
-        }
+        
 
         if(ensureDB == true)
         {

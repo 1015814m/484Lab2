@@ -55,7 +55,7 @@
                 &nbsp;</p>
             <p>
                 <asp:Label ID="lblHireDate" runat="server" Text="Hire Date: " Width="100px"></asp:Label>
-                <asp:TextBox placeholder="YYYY-MM-DD" ID="txtHireDate" runat="server" CssClass="mediumInputText" require=""></asp:TextBox>
+                <asp:TextBox  placeholder="YYYY-MM-DD" ID="txtHireDate" runat="server" CssClass="mediumInputText" require=""></asp:TextBox>
             </p>
             <p>
                 <asp:Label ID="lblTerminationDate" runat="server" Text="Termination Date*: " Width="100px"></asp:Label>
@@ -74,6 +74,14 @@
                 <asp:DropDownList ID="projectDropDown" runat="server" >
                 </asp:DropDownList>
             </p>
+            <p >
+                <asp:Label ID="lblProjectStart" runat="server" Text="Project Start Date: " Width="100px"></asp:Label>
+                <asp:TextBox ID="txtProjStart" runat="server" placeholder="YYYY-MM-DD" CssClass="mediumInputText"></asp:TextBox>
+            </p>
+            <p >
+                <asp:Label ID="lblProjEnd" runat="server" Text="Project End Date:" Width="100px"></asp:Label>
+                <asp:TextBox ID="txtProjEnd" runat="server" placeholder="YYYY-MM-DD" CssClass="mediumInputText"></asp:TextBox>
+            </p>
                 <p >
                     <asp:Label ID="lblSkillSelection" runat="server" Text="Skills: " Width="100px"></asp:Label>
                     <asp:DropDownList ID="skillDropDown" runat="server">
@@ -82,19 +90,23 @@
             <p>
                 <asp:Button CssClass="btn" ID="btnCommitEmployee" runat="server" Text="Commit" OnClick="btnCommitEmployee_Click" />
                 <asp:Button CssClass="btn" ID="btnClear" runat="server" Text="Clear" OnClick="btnClear_Click" />
-                <asp:Button CssClass="btn" ID="btnExit" runat="server" Text="Exit" OnClick="btnExit_Click" />
+                <asp:Button CssClass="btn" ID="btnExit" runat="server" Text="Exit" OnClick="btnExit_Click" formnovalidate=""/>
             </p>
             <p>
                 <asp:Label ID="resultMessage" runat="server" Text=""></asp:Label>
                 </p>
-            <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:Lab2ConnectionString %>" SelectCommand="SELECT * FROM [Employee] ORDER BY [EmployeeID]"></asp:SqlDataSource>
-                
+            <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:GridviewConnection %>" SelectCommand="SELECT [DBO].[EMPLOYEE].[EMPLOYEEID],[DBO].[EMPLOYEE].[FIRSTNAME],[DBO].[EMPLOYEE].[LASTNAME],[DBO].[PROJECT].[PROJECTNAME]
+FROM [DBO].[EMPLOYEE]
+LEFT JOIN [DBO].[EMPLOYEEPROJECT]
+ON [DBO].[EMPLOYEE].[EMPLOYEEID] = [DBO].[EMPLOYEEPROJECT].[EMPLOYEEID]
+LEFT JOIN [DBO].[PROJECT]
+ON [DBO].[PROJECT].[PROJECTID] = [DBO].[EMPLOYEEPROJECT].[PROJECTID]"></asp:SqlDataSource>
+                <!-- If there is an error with the datasource take code from backup -->
             <p>
                 <asp:Label ID="errorMessage" runat="server" Text=""></asp:Label>
             </p>
             <p>
-                <asp:CheckBox ID="CheckBox1" Text="Display All Information" Checked="true" runat="server" />
-            </p>
+                &nbsp;</p>
         </section>
         
             
@@ -103,19 +115,20 @@
         
         <aside >
             <br />
-            <asp:GridView  style="float: left;"  ID="GridView1" runat="server" AutoGenerateColumns="False" DataKeyNames="EmployeeID" DataSourceID="SqlDataSource1" AllowPaging="True" AllowSorting="True" Font-Size="Small" Width="50%">
+            <asp:GridView  style="float: left;"  ID="GridView1" runat="server" AutoGenerateColumns="False" DataKeyNames="EMPLOYEEID" DataSourceID="SqlGridView" AllowPaging="True" AllowSorting="True" Font-Size="Small" Width="50%">
                 <Columns>
-                    <asp:BoundField DataField="EmployeeID" HeaderText="EmployeeID" InsertVisible="False" ReadOnly="True" SortExpression="EmployeeID" />
-                    <asp:BoundField DataField="FirstName" HeaderText="FirstName" SortExpression="FirstName" />
-                    <asp:BoundField DataField="LastName" HeaderText="LastName" SortExpression="LastName" />
-                    <asp:BoundField DataField="HireDate" HeaderText="HireDate" SortExpression="HireDate" />
-                    <asp:BoundField DataField="TerminationDate" HeaderText="TerminationDate" SortExpression="TerminationDate" />
-                    <asp:BoundField DataField="Salary" HeaderText="Salary" SortExpression="Salary" />
-                    <asp:BoundField DataField="ManagerID" HeaderText="ManagerID" SortExpression="ManagerID" />
-                    <asp:BoundField DataField="LastUpdatedBy" HeaderText="LastUpdatedBy" SortExpression="LastUpdatedBy" />
-                    <asp:BoundField DataField="LastUpdated" HeaderText="LastUpdated" SortExpression="LastUpdated" />
+                    <asp:BoundField DataField="EMPLOYEEID" HeaderText="EMPLOYEEID" InsertVisible="False" ReadOnly="True" SortExpression="EMPLOYEEID" />
+                    <asp:BoundField DataField="FIRSTNAME" HeaderText="FIRSTNAME" SortExpression="FIRSTNAME" />
+                    <asp:BoundField DataField="LASTNAME" HeaderText="LASTNAME" SortExpression="LASTNAME" />
+                    <asp:BoundField DataField="PROJECTNAME" HeaderText="PROJECTNAME" SortExpression="PROJECTNAME" />
                 </Columns>
             </asp:GridView>
+            <asp:SqlDataSource ID="SqlGridView" runat="server" ConnectionString="<%$ ConnectionStrings:GridviewConnection %>" SelectCommand="SELECT [DBO].[EMPLOYEE].[EMPLOYEEID],[DBO].[EMPLOYEE].[FIRSTNAME],[DBO].[EMPLOYEE].[LASTNAME],[DBO].[PROJECT].[PROJECTNAME]
+FROM [DBO].[EMPLOYEE]
+LEFT JOIN [DBO].[EMPLOYEEPROJECT]
+ON [DBO].[EMPLOYEE].[EMPLOYEEID] = [DBO].[EMPLOYEEPROJECT].[EMPLOYEEID]
+LEFT JOIN [DBO].[PROJECT]
+ON [DBO].[PROJECT].[PROJECTID] = [DBO].[EMPLOYEEPROJECT].[PROJECTID]"></asp:SqlDataSource>
             </aside>
             
         </section>
