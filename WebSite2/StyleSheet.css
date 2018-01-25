@@ -42,7 +42,7 @@ li a:hover:not(.active) {
     
     
     
-    width: 12%;
+    width: 175px;
 }
 
 .mediumInputText {
@@ -50,7 +50,7 @@ li a:hover:not(.active) {
     
     
     
-    width: 5%;
+    width: 90px;
 }
 
 .shortInputText {
@@ -58,7 +58,7 @@ li a:hover:not(.active) {
     
     
     
-    width: 2%;
+    width: 25px;
 }
 
 .btn {
@@ -81,4 +81,11 @@ body {
     border-radius: 4px;
     display: block;
 }
+
+.label 
+{
+    max-width: 100px;
+    
+}
+
 

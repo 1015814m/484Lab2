@@ -28,10 +28,10 @@ public class Employee
     private DateTime updatedDate;
     public static int EmployeeCount = 0;
 
-    public Employee(int employeeID, string fName, string lName, string mName, string houseNum, string street, string county, string state, string country, string zip,
+    public Employee(string fName, string lName, string mName, string houseNum, string street, string county, string state, string country, string zip,
         DateTime dateOfBirth, DateTime hireDate, DateTime terminationDate, double salary, int managerID, string updatedBy, DateTime updatedDate)
     {
-        EmployeeID = employeeID;
+        //EmployeeID should come from the database
         FirstName = fName;
         LastName = lName;
         MiddleName = mName;

@@ -15,9 +15,9 @@ public class Skill
     private DateTime lastUpdated;
     private static int skillCount = 0;
 
-    public Skill(int skillID, string skillName, string skillDescription, string lastUpdatedBy, DateTime lastUpdated)
+    public Skill(string skillName, string skillDescription, string lastUpdatedBy, DateTime lastUpdated)
     {
-        SkillID = skillID;
+        //SkillID should come from the database
         SkillName = skillName;
         SkillDescription = skillDescription;
         LastUpdatedBy = lastUpdatedBy;

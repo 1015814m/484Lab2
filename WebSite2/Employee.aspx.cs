@@ -8,31 +8,124 @@ using System.Web.UI.HtmlControls;
 using System.Configuration;
 
 
-//John Morrissey Lab 1
-
+//John Morrissey Lab 2
+/*
+ * TO DO:
+ * CHANGE THE IF STATEMENTS SO THAT IF THE FIELDS ARE EMPTY THAT THEY BECOME NULL
+ * COMPLETE THE VALIDATION AND CONSIDER ANY FURTHER VALIDATION WITH THE NEW STUFF
+ * CREATE THE BRIDGE INSERT STATEMENTS
+ * DOES EACH CONSTRUCTOR NEED A SELECT STATEMENT?
+ * ENSURE THAT THE SELECTED INDEX GETS THE RIGHT NUMBER
+ * EMPLOYEEPROJECTSTARTDATE/EMPLOYEEPROJECTENDDATE - WHERE DOES THE USER INPUT THESE NUMBERS
+ *      AND ON WHICH FORM IS THIS DONE
+  */
 public partial class EmployeeDefault : System.Web.UI.Page
 {
-    public static int count = 0;
-    public static string[,] returnArray = new string[1000, 2];
+    private static int selectSkill;
+    private static int selectProject;
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        //Select information from the database and input it into the drop downs
+        //Set the variables for the users selections
+        selectSkill = skillDropDown.SelectedIndex - 1;
+        selectProject = projectDropDown.SelectedIndex - 1;
+
+        //Select from the database and add that to the drop down
+        projectDropDown.Items.Clear();
+        projectDropDown.Items.Add("(No Project)");
+        skillDropDown.Items.Clear();
+        skillDropDown.Items.Add("(No Project)");
+        selectFromDB("SKILL","SkillName", projectDropDown);
+        selectFromDB("PROJECT", "ProjectName", skillDropDown);
+
+        
     }
-
-
-
-
-
 
     protected void btnCommitEmployee_Click(object sender, EventArgs e)
     {
+        
+        Boolean ensureDB = true;
+
+        try
+        {
+            //Perform validation to ensure that all user entries are correct
+            if (true)
+            {
+                //check to ensure that all textboxes values can be parsed
+            }
+            if (true)
+            {
+                //check the hire date against the termination date
+            }
+            if (true)
+            {
+                //check to ensure that the user doesnt already exist
+            }
+            if (true)
+            {
+                //check to ensure that all users are atleast 18 years old
+            }
+            if (true)
+            {
+                //check that the user entered a state in the United States
+            }
+            if (true)
+            {
+                //check to see if the user ID already exists in the DB
+            }
+            if (true)
+            {
+                //check to see if the manager ID already exists
+            }
+            if (true)
+            {
+                //check to ensure all number entries are positive numbers
+            }
+            if (ensureDB) //if the boolean passes all the checks then it is valid and can be entered
+            {
+                if(true)
+                {
+                    //middle initial null?
+                }
+                if(true)
+                {
+                    //state null?
+                }
+                if(true)
+                {
+                    //termination date null?
+                }
+                if(true)
+                {
+                    //manager ID null?
+                }
+
+                //Create the new Employee i.e. send to constructor
+                Employee newEmployee = new Employee(txtFirstName.Text, txtLastName.Text, txtMiddleInitial.Text,
+                    txtHouseNum.Text, txtStreet.Text, txtCity.Text, txtState.Text, txtCountry.Text, txtZip.Text,
+                    DateTime.Parse(txtDateOfBirth.Text), DateTime.Parse(txtHireDate.Text), DateTime.Parse(txtTerminationDate.Text),
+                    double.Parse(txtSalary.Text), int.Parse(txtManagerID.Text), (string)Session["user"], System.DateTime.Now);
+
+                //Insert the user into the database
+
+
+                resultMessage.Text = "User Created: ID# " + findMaxID() + " " + newEmployee.FirstName + " "
+                    + newEmployee.LastName;
+            }
+        }
+        catch (Exception c)
+        {
+
+        }
+
+
+        
 
     }
 
     protected void btnClear_Click(object sender, EventArgs e)
     {
-        ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Fields are cleared')", true);
+        //ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Fields are cleared')", true);
         txtFirstName.Text = "";
         txtLastName.Text = "";
         txtMiddleInitial.Text = "";
@@ -52,175 +145,167 @@ public partial class EmployeeDefault : System.Web.UI.Page
 
     protected void btnExit_Click(object sender, EventArgs e)
     {
+        
         //Exits the web application
+
     }
 
-    private Boolean checkState(string stateAbb)
-    {
-        string[] stateArray = new string[] {"AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA",
-            "HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE",
-            "NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT",
-            "VT","VA","WA","WV","WI","WY"};
-
-        for (int i = 0; i < stateArray.Length; i++)
-        {
-            if (stateAbb.ToUpper() == stateArray[i])
-            {
-                return true;
-            }
-
-        }
-
-        return false;
-    }
-
-    private Boolean checkEntries()
+    private void selectFromDB(string table, string column, Control cntrl)
     {
         try
         {
-            DateTime.Parse(txtDateOfBirth.Text);
-            DateTime.Parse(txtHireDate.Text);
-            if (txtTerminationDate.Text != "")
-            {
-                DateTime.Parse(txtTerminationDate.Text);
-            }
+            //Connect to the DB
+            System.Data.SqlClient.SqlConnection sqlc = connectToDB();
 
-            Double.Parse(txtSalary.Text);
-            if (txtManagerID.Text != "")
-            {
-                Int32.Parse(txtManagerID.Text);
-            }
-            
+            //Creates a new sql select command to select the data from the skills table
+            System.Data.SqlClient.SqlCommand select = new System.Data.SqlClient.SqlCommand();
+            select.Connection = sqlc;
+            select.CommandText = "select " + column + " from [dbo].[" + table + "]";
+            System.Data.SqlClient.SqlDataReader reader;
 
+            reader = select.ExecuteReader();
+
+
+            while (reader.Read())
+            {
+                (cntrl as DropDownList).Items.Add(reader.GetString(0));
+                
+            }
+            sqlc.Close();
+        }
+        catch (Exception c)
+        {
+            //Shows an error message if there is a problem connecting to the database
+            resultMessage.Text += "DROP DOWN ERROR";
+            resultMessage.Text += c.Message;
+        }
+    }
+
+    protected System.Data.SqlClient.SqlConnection connectToDB()
+    {
+        try
+        {
+            //Connects to the database and returns the connection
+            System.Data.SqlClient.SqlConnection sc = new System.Data.SqlClient.SqlConnection();
+            sc.ConnectionString = @"Server =Localhost; Database=Lab2;Trusted_Connection=Yes";
+            sc.Open();
+            return sc;
         }
         catch (Exception)
         {
-
-            return false;
+            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertmessage", "alert('There was an error connecting to the Database')", true);
+            return null;
         }
-        return true;
-
-
     }
 
-    private Boolean checkManagerID(int managerID)
+    private void insertBridge(int id, Employee person)
     {
-        // Check that the ManagerID entered by the user exists in the Database
-        //    if (count != 0)
-        //    {
-        //        for (int i = 0; i < count; i++)
-        //        {
-        //            if (managerID != employeeArray[i].EmployeeID)
-        //            {
-        //                continue;
-        //            }
-        //            else
-        //            {
-        //                return false;
-        //            }
-
-        //        }
-        //    }
-        //    else if (count == 0)
-        //    {
-        //        if (int.Parse(txtEmployeeID.Value) == int.Parse(txtManagerID.Value))
-        //        {
-        //            return false;
-        //        }
-        //        else if (txtManagerID.Value == "")
-        //        {
-        //            return false;
-        //        }
-        //        else
-        //        {
-        //            return true;
-        //        }
-        //    }
-
-        //    return true;
-        return true;
-
-        }
-
-    private Boolean checkAge(DateTime dateOfBirth)
-    {
-        if ((dateOfBirth.AddYears(18) <= DateTime.Now))
+        try
         {
-            if (dateOfBirth.AddYears(18) <= DateTime.Parse(txtHireDate.Text))
+            //Connect to the DB
+            System.Data.SqlClient.SqlConnection sqlc = connectToDB();
+
+            //Creates a new sql insert statement to insert into the bridge table
+            System.Data.SqlClient.SqlCommand insert = new System.Data.SqlClient.SqlCommand();
+            insert.Connection = sqlc;
+            insert.CommandText = "insert into [dbo].[EMPLOYEESKILL] values (" + findMaxID() + ","
+                + selectSkill + ",'" + (string)Session["user"] + "','" + System.DateTime.Now + "')";
+
+            insert.ExecuteNonQuery();
+            sqlc.Close();
+        }
+        catch (Exception c)
+        {
+
+            errorMessage.Text += c;
+        }
+    }
+
+    private int findMaxID()
+    {
+        try
+        {
+            System.Data.SqlClient.SqlConnection sqlc = connectToDB();
+
+            //Creates the sql select statement
+            System.Data.SqlClient.SqlCommand select = new System.Data.SqlClient.SqlCommand();
+            select.Connection = sqlc;
+
+            select.CommandText += "SELECT MAX(EMPLOYEEID) FROM [DBO].[EMPLOYEE]";
+
+            int i = (int)select.ExecuteScalar();
+            
+            sqlc.Close();
+            return i;
+        }
+        catch (Exception c)
+        {
+            errorMessage.Text += c;
+            return -1;
+        }
+    }
+
+    private void commitEmployeeToDB(Employee person)
+    {
+        try
+        {
+            System.Data.SqlClient.SqlConnection sqlc = connectToDB();
+
+            //Creates the employee insert statement
+            System.Data.SqlClient.SqlCommand insert = new System.Data.SqlClient.SqlCommand();
+            insert.Connection = sqlc;
+
+            //After the objects attributes are set to their values this will run and insert nulls where applicable
+
+            insert.CommandText += "insert into [dbo].[EMPLOYEE] values ('" + person.FirstName + "','" + person.LastName;
+            if (person.MiddleName == "NULL")
             {
-                return true;
+                insert.CommandText += "',NULL,'";
             }
             else
             {
-                return false;
+                insert.CommandText += "','" + person.MiddleName + "','";
             }
 
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    private Boolean checkDate(DateTime firstDate, DateTime secondDate)
-    {
-        int i = secondDate.CompareTo(firstDate);
-        //Is the second date past the first date
-        if (i < 0)
-        {
-            return false;
-        }
-        else if (i == 0)
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
-    }
-
-    private Boolean checkID(int id)
-    {
-        //This checks whether the ID number exists in the array
-        for (int i = 0; i < count; i++)
-        {
-            if (id == employeeArray[i].EmployeeID)
+            insert.CommandText += person.HouseNum + "','" + person.Street + "','" + person.County;
+            if (person.State == "NULL")
             {
-                return true;
+                insert.CommandText += "',NULL,'";
             }
-        }
-        return false;
-    }
-
-    private Boolean checkName(string firstName, string lastName)
-    {
-        if (count == 0)
-        {
-            return false;
-        }
-
-        //this checks whether the name already exists in the array
-        string arrayName = "";
-        string txtBoxName = "";
-        txtBoxName = firstName.ToUpper() + lastName.ToUpper();
-        Boolean result;
-
-        for (int i = 0; i < count; i++)
-        {
-            arrayName = employeeArray[i].FirstName.ToUpper() + employeeArray[i].LastName.ToUpper();
-            if (arrayName == txtBoxName)
+            else
             {
-                result = true;
-                return result;
+                insert.CommandText += "','" + person.State + "','";
             }
 
+            insert.CommandText += person.Country + "','" + person.Zip + "','" + person.DateOfBirth + "','" + person.HireDate;
+            if (person.TerminationDate == DateTime.MinValue)
+            {
+                insert.CommandText += "',NULL,";
+            }
+            else
+            {
+                insert.CommandText += "','" + person.TerminationDate + "',";
+            }
+
+            insert.CommandText += person.Salary;
+
+            if (person.ManagerID == -1)
+            {
+                insert.CommandText += ",NULL,'";
+            }
+            else
+            {
+                insert.CommandText += "," + person.ManagerID + ",'";
+            }
+            insert.CommandText += person.LastUpdatedBy + "','" + person.LastUpdated + "')";
         }
-
-        return false;
-
-
+        catch (Exception c)
+        {
+            errorMessage.Text += c;
+        }
     }
+
+
 
 
 }

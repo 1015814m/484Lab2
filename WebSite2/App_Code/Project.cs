@@ -15,9 +15,9 @@ public class Project
     private DateTime lastUpdated;
     private static int projectCount = 0;
 
-    public Project(int projectID, string projectName, string projectDescription, string lastUpdatedBy, DateTime lastUpdated)
+    public Project(string projectName, string projectDescription, string lastUpdatedBy, DateTime lastUpdated)
     {
-        ProjectID = projectID;
+        //ProjectID should come from the database
         ProjectName = projectName;
         ProjectDescription = projectDescription;
         LastUpdatedBy = lastUpdatedBy;
